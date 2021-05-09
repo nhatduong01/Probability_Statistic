@@ -15,3 +15,37 @@ dietdata <- read.csv("C:/Users/ADMIN/Desktop/Learning/Statistics and Probability
 print(dietdata)
 
 boxplot(WeightLoss~Diet)
+mice_data <- read.csv("C:/Users/ADMIN/Desktop/Learning/Statistics and Probability/Assignment/twoanova.csv", header =  T,
+                      colClasses = c( "numeric","numeric","factor", "factor"))
+# attach the data
+attach(mice_data)
+### Data visualization
+# draw the histogram
+hist(mice_data$activity)
+# draw the boxplot for the first factor (predator_density)
+boxplot(mice_data$activity~predator_density)
+# draw the boxplot for the second factor (timing)
+boxplot(mice_data$activity~timing)
+### ANOVA testing
+model1 <- aov(activity ~ predator_density * timing, data = mice_data)
+summary (model1)
+### The real Ex3 problem
+late_student = read.csv("C:/Users/ADMIN/Desktop/Learning/Statistics and Probability/Assignment/Ex3.csv", header =  T,
+                        colClasses = c("factor", "factor", "numeric"))
+attach(late_student)
+#Data Visulization
+# the number of students on different days
+boxplot(Students~late_student$Days.of.week)
+# the number of studentss on different school
+boxplot(Students~late_student$School)
+# analyse using ANOVA
+result <- aov(Students~Days.of.week*School,data = late_student)
+# view the result
+anova(result)
+
+
+
+y = c(5,4,5,7,4,5,3,2,4,3,4,5,4,4,3,2)
+days = factor(rep(c("Monday","Tuesday","Wednesday","Thurday"),each=4))
+schools =factor(rep(c("A","B","C","D"),4))
+summary(aov(y ~ days + schools))
