@@ -1,0 +1,25 @@
+Đây là dữ kiện về bệnh nhân chết do quá liều thuốc, nó cung cấp
+ID, ngày mất/ ngày nhận tin, age, sex, race, residence city, residence County,...
+
+1. Data import
+
+2. Data cleaning
+Anh lấy các biến age, sex, race, description of injury với lại từ cột Heroin đến
+Hydromorphone nhaaa.
+Ở cột description of injury sẽ có những ô trống, mình xem như nó là NA value rồi anh
+lọc bỏ hết mấy hàng đó nhaaa.
+
+3. Data visualization:
+(a) Transformation thì TN đang kh biết chỗ này ném gì =)))
+(b) Analyze the data: thì anh biết mà gì rùi đúng hongggg, cũng mean, max, min, median,
+vân vân mây mây
+-Continuous variable: age
+-Discrete variables: sex, race, description of injury (cái này nó hơi nhiều options mà
+em nghĩ mình thống kê cho mấy cái gì nhiều nhiều là được: substance abuse, injection, drug use,
+ingestion, drug abuse, inhalation,...) 
+(c) Plot vẽ hết có gì anh nghĩ ra anh cứ vẽ i =)))
+
+4. Models fitting: Em kh biết làm gì với cái này :( Maybe như bài điểm ở Bồ Đào Nha?
+Mình xem sự phụ thuộc của từng chất (nguyên nhân dẫn đến quá liều) đối với age, sex, race
+rồi mình bỏ từ từ các yếu tố? (nghĩa là hơi bị nhiều mấy models á nên nhìn lên
+số thống kê ở trên, mình lấy 3 chất gây chết nhiều nhất nha) Em hông biết đâu you decide :<
