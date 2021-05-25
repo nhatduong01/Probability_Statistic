@@ -1,7 +1,7 @@
 # Read the given csv file
 data <- read.csv("C:/Users/ADMIN/Desktop/Learning/Statistics and Probability/Assignment/grade.csv",)
 # Extract the necessary data and store it to a new variable
-new_DF = data.frame(data$G1,data$G2,data$G3, data$studytime,data$failures, data$absences, data$higher, data$age)
+new_DF = data.frame(data$G1,data$G2,data$G3, data$studytime,data$failures, data$absences, data$higher, data$age,data$sex)
 # Omit the missing data
 new_DF = na.omit(new_DF)
 # Change the data type of each column
@@ -9,31 +9,39 @@ new_DF = na.omit(new_DF)
 new_DF$data.G1 = as.integer(new_DF$data.G1 )
 new_DF$data.G2 = as.integer(new_DF$data.G2 )
 new_DF$data.G3 = as.integer(new_DF$data.G3 )
-new_DF$data.studytime = as.integer(new_DF$data.studytime)
-new_DF$data.failures = as.integer(new_DF$data.failures)
 new_DF$data.absences = as.integer(new_DF$data.absences)
 new_DF$data.age = as.integer(new_DF$data.age)
 # This is a factor data type
 new_DF$data.higher = factor(new_DF$data.higher)
+new_DF$data.studytime = factor(new_DF$data.studytime)
+new_DF$data.failures = factor(new_DF$data.failures)
+new_DF$data.sex = factor(new_DF$data.sex)
 # attach the data
 attach(new_DF)
 # calculate the mean of each row
-data_mean = apply(new_DF[,-c(7)],2, mean)
+data_mean = apply(new_DF[,-c(4,5,7,9)],2, mean)
 # calculate the median of each row
-data_median  = apply(new_DF[,-c(7)],2 , median)
+data_median  = apply(new_DF[,-c(4,5,7,9)],2 , median)
 # calculate the SD of each row
-data_sd = apply(new_DF[,-c(7)], 2, sd)
+data_sd = apply(new_DF[,-c(4,5,7,9)], 2, sd)
 # get the min of each row
-data_min = apply(new_DF[,-c(7)], 2, min)
+data_min = apply(new_DF[,-c(4,5,7,9)], 2, min)
 # get the max of each row
-data_max = apply(new_DF[,-c(7)], 2, max)
+data_max = apply(new_DF[,-c(4,5,7,9)], 2, max)
 # merge the array into a list
 x<-list(mean = data_mean, median = data_median,min = data_min, max = data_max)
 # Convert the list to data.frame 
 continuous_variable<- as.data.frame(x)
-# classify if student want to be higher or not
-classified_variable <- as.data.frame(table(new_DF$data.higher))
-
+#print the data
+print(continuous_variable)
+# summary of sex variable
+summary(new_DF$data.sex)
+#summary of higher variable
+summary(new_DF$data.higher)
+#summary of studytime
+summary(new_DF$data.studytime)
+#summary of failures
+summary(new_DF$data.failures)
 #Draw Histogram of G3
 # Because G3 distribute from 0 to 20
 # We draw histogram with 21 cells
@@ -64,21 +72,30 @@ pairs(~new_DF$data.G3 + new_DF$data.age, col = "blue",
       main = "Scatter plot of G3 and age")
 
 ### Question 4
+# we convert to numeric in order to calculate
+new_DF$data.studytime = as.numeric(new_DF$data.studytime)
+new_DF$data.higher = as.numeric(new_DF$data.higher)
+new_DF$data.studytime = as.numeric(new_DF$data.studytime)
+new_DF$data.failures = as.numeric(new_DF$data.failures)
+new_DF$data.sex = as.numeric(new_DF$data.sex)
+# convert binary info to 0 and 1
+new_DF$data.higher <- ifelse(new_DF$data.higher == "yes", 1, 0)
+new_DF$data.sex <- ifelse(new_DF$data.sex == "M", 1, 0)
 # Using Linear Regression to analyze G3 according to other variables
 linear_reg = lm (formula = new_DF$data.G3~data.G1 + data.G2 + data.studytime+ data.failures
-                 + data.absences + data.age + data.higher, data = new_DF)
+                 + data.absences + data.age + data.higher + data.sex, data = new_DF)
 # get the information
 summary(linear_reg)
 # Question c
 # M1 depends on all the variables
 M1 = lm (formula = new_DF$data.G3~data.G1 + data.G2 +data.studytime+ data.failures
-         + data.absences + data.age + data.higher, data = new_DF)
+         + data.absences + data.age + data.higher + data.sex, data = new_DF)
 # M2 does not depend on higher
 M2 = lm (formula =new_DF$data.G3 ~data.G1 + data.G2 + data.studytime+ data.failures
-         + data.absences + data.age, data = new_DF)
+         + data.absences + data.age + data.sex, data = new_DF)
 # M3 does not depend on failure and higher
 M3 = lm (formula =new_DF$data.G3 ~data.G1 + data.G2 + data.studytime
-         + data.absences + data.age, data = new_DF)
+         + data.absences + data.age + data.sex, data = new_DF)
 # Using ANOVA to determine which model is the best
 # Do not confuse this anova() to aov() which performs ANOVA test
 compare = anova(M1,M2,M3, test = 'F')
@@ -99,9 +116,9 @@ my_table = table(percentage)
 evaluate = prop.table(my_table)
 evaluate = data.frame(evaluate)
 # extract the necessary independent value in M3
-new_X = data.frame(new_DF$data.G1,new_DF$data.G2, new_DF$data.studytime, new_DF$data.absences, new_DF$data.age)
+new_X = data.frame(new_DF$data.G1,new_DF$data.G2, new_DF$data.studytime, new_DF$data.absences, new_DF$data.age, new_DF$data.sex)
 ## generate the value of predicted G3 by the model G3
-pred_G3 = predict(M3,new_X)
+pred_G3 = predict(M3,data = new_X)
 # compare each entry with 10
 percentage2 = pred_G3 >= 10
 # organize into a table
